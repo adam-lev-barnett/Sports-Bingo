@@ -9,20 +9,6 @@ interface SportSelectionProps {
 
 const sports = [
   {
-    id: "soccer" as Sport,
-    name: "Soccer",
-    icon: "mdi:soccer",
-    color:
-      "from-zinc-700 to-zinc-800 hover:from-zinc-600 hover:to-zinc-700 border-2 border-green-500",
-  },
-  {
-    id: "americanFootball" as Sport,
-    name: "Football",
-    icon: "mdi:football",
-    color:
-      "from-zinc-700 to-zinc-800 hover:from-zinc-600 hover:to-zinc-700 border-2 border-green-500",
-  },
-  {
     id: "baseball" as Sport,
     name: "Baseball",
     icon: "mdi:baseball",
@@ -37,9 +23,9 @@ const sports = [
       "from-zinc-700 to-zinc-800 hover:from-zinc-600 hover:to-zinc-700 border-2 border-green-500",
   },
   {
-    id: "rugby" as Sport,
-    name: "Rugby",
-    icon: "mdi:rugby",
+    id: "americanFootball" as Sport,
+    name: "Football",
+    icon: "mdi:football",
     color:
       "from-zinc-700 to-zinc-800 hover:from-zinc-600 hover:to-zinc-700 border-2 border-green-500",
   },
@@ -47,6 +33,20 @@ const sports = [
     id: "hockey" as Sport,
     name: "Hockey",
     icon: "mdi:hockey-sticks",
+    color:
+      "from-zinc-700 to-zinc-800 hover:from-zinc-600 hover:to-zinc-700 border-2 border-green-500",
+  },
+  {
+    id: "rugby" as Sport,
+    name: "Rugby",
+    icon: "mdi:rugby",
+    color:
+      "from-zinc-700 to-zinc-800 hover:from-zinc-600 hover:to-zinc-700 border-2 border-green-500",
+  },
+  {
+    id: "soccer" as Sport,
+    name: "Soccer",
+    icon: "mdi:soccer",
     color:
       "from-zinc-700 to-zinc-800 hover:from-zinc-600 hover:to-zinc-700 border-2 border-green-500",
   },
@@ -70,7 +70,7 @@ export function SportSelection({ onSelectSport, onBack }: SportSelectionProps) {
         transition={{ type: "spring", duration: 0.8 }}
         className="text-center mb-8"
       >
-        <h1 className="text-green-500 mb-2 tracking-tight uppercase">
+        <h1 className="text-3xl text-green-500 mb-2 tracking-tight uppercase">
           Select a Sport
         </h1>
         <div className="h-1 w-20 bg-green-500 mx-auto mb-3"></div>

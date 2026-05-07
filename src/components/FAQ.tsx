@@ -9,8 +9,8 @@ interface FAQProps {
 
 const faqs = [
   {
-    q: 'How do I play Sports Bingo?',
-    a: 'Pick a sport, then mark off squares on your bingo board as those events happen during a live game. Get five in a row — horizontally, vertically, or diagonally — to win!',
+    q: 'How do I play Fanatic Bingo?',
+    a: 'Enter a username and choose Private, Multiplayer, or Join Game. Pick a sport, then mark off squares on your bingo board as those events happen during a live game. Get five in a row — horizontally, vertically, or diagonally — to win!',
   },
   {
     q: 'What is the Free Space?',
@@ -22,11 +22,11 @@ const faqs = [
   },
   {
     q: 'How do I create a multiplayer game?',
-    a: 'Choose Multiplayer from the lobby, set your team name and username, then share the generated game code with your friends.',
+    a: 'Choose Multiplayer from the lobby, set your team name and username, then share the generated game code with up to five friends.',
   },
   {
     q: 'How do I join a multiplayer game?',
-    a: 'Tap Join Game in the lobby and enter the 6-character code your host shared with you.',
+    a: 'Two ways to join: The host will send a link with a join code directly, where a username and the 6-character code can be entered directly. Or, tap Join Game in the lobby and enter your username and 6-character code your host shared with you.',
   },
   {
     q: 'How long does a multiplayer session last?',
@@ -39,6 +39,10 @@ const faqs = [
   {
     q: 'What happens when someone gets Bingo?',
     a: 'You\'ll see a congratulations screen. You can choose to start a fresh new game or keep your current board.',
+  },
+  {
+    q: 'Do you collect personal data?',
+    a: 'No. The only data that is collected are browser cookies. That allows you to save your progress and get back into the game if you hit refresh.',
   },
 ];
 
@@ -75,7 +79,7 @@ export function FAQ({ onBack }: FAQProps) {
                 key={i}
                 initial={{ x: -20, opacity: 0 }}
                 animate={{ x: 0, opacity: 1 }}
-                transition={{ delay: i * 0.05 }}
+                transition={{ delay: i * 0.02 }}
                 className="bg-zinc-800 border border-zinc-700 rounded overflow-hidden"
               >
                 <button

@@ -37,7 +37,7 @@ function titleCase(val: string): string {
     .join(' ');
 }
 
-export function SessionLobby({ onSolo, onMultiplayerCreate, onJoin, onFaq }: SessionLobbyProps) {
+export function SessionLobby({ user: _user, onSolo, onMultiplayerCreate, onJoin, onFaq }: SessionLobbyProps) {
   const [username, setUsername] = useState('');
   const [showUsernameError, setShowUsernameError] = useState(false);
   const [infoPopup, setInfoPopup] = useState<'solo' | 'multiplayer' | 'join' | null>(null);
@@ -96,7 +96,8 @@ export function SessionLobby({ onSolo, onMultiplayerCreate, onJoin, onFaq }: Ses
           className="w-full max-w-md"
         >
           <div className="text-center mb-8">
-            <h2 className="uppercase tracking-wider mb-1" style={{ color: GREEN }}>Fanatic Bingo</h2>
+            <h2 className="text-3xl uppercase tracking-wider mb-1" style={{ color: GREEN }}>Fanatic Bingo</h2>
+            <p className="text-xs tracking-wider text-neutral-400 mb-2">By Fans, For Fans.</p>
             <div className="h-1 w-20 mx-auto" style={{ backgroundColor: GREEN }} />
           </div>
 
