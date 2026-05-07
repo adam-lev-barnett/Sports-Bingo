@@ -96,9 +96,8 @@ export function SessionLobby({ onSolo, onMultiplayerCreate, onJoin, onFaq }: Ses
           className="w-full max-w-md"
         >
           <div className="text-center mb-8">
-            <h2 className="uppercase tracking-wider mb-1" style={{ color: GREEN }}>Sports Bingo</h2>
-            <div className="h-1 w-20 mx-auto mb-3" style={{ backgroundColor: GREEN }} />
-            <p className="text-neutral-400">How do you want to play?</p>
+            <h2 className="uppercase tracking-wider mb-1" style={{ color: GREEN }}>Fanatic Bingo</h2>
+            <div className="h-1 w-20 mx-auto" style={{ backgroundColor: GREEN }} />
           </div>
 
           {/* Username */}
@@ -128,6 +127,8 @@ export function SessionLobby({ onSolo, onMultiplayerCreate, onJoin, onFaq }: Ses
               <p className="text-red-400 text-xs text-center mt-1">Minimum 2 characters</p>
             )}
           </div>
+
+          <p className="text-neutral-400 text-center mb-3">How do you want to play?</p>
 
           <div className="flex flex-col gap-3">
             {/* Solo */}
@@ -250,7 +251,7 @@ export function SessionLobby({ onSolo, onMultiplayerCreate, onJoin, onFaq }: Ses
       <div className="flex flex-col items-center gap-3 pb-8">
         <button
           onClick={onFaq}
-          className="text-neutral-500 hover:text-neutral-300 text-xs uppercase tracking-wider transition-colors"
+          className="text-neutral-500 hover:text-neutral-300 text-xs tracking-wider transition-colors"
         >
           FAQs
         </button>
