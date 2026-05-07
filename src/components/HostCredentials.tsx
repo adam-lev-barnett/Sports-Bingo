@@ -6,6 +6,7 @@ import { Button } from './ui/button';
 interface HostCredentialsProps {
   onBack: () => void;
   onContinue: (groupName: string, initials: string, joinCode: string) => Promise<void>;
+  defaultUsername?: string;
 }
 
 const JOIN_CODE_CHARS = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
@@ -18,11 +19,10 @@ function generateJoinCode(): string {
   return code;
 }
 
-export function HostCredentials({ onBack, onContinue }: HostCredentialsProps) {
+export function HostCredentials({ onBack, onContinue, defaultUsername }: HostCredentialsProps) {
   const [groupName, setGroupName] = useState('');
-  const [username, setUsername] = useState('');
+  const [username, setUsername] = useState(defaultUsername ?? '');
   const [joinCode] = useState(generateJoinCode);
-  const [showTimerWarning, setShowTimerWarning] = useState(false);
   const [copied, setCopied] = useState(false);
   const [starting, setStarting] = useState(false);
   const [startError, setStartError] = useState<string | null>(null);
@@ -73,7 +73,7 @@ export function HostCredentials({ onBack, onContinue }: HostCredentialsProps) {
           <Button
             onClick={onBack}
             variant="ghost"
-            className="text-neutral-300 hover:bg-zinc-800 hover:text-yellow-500 h-8 px-3"
+            className="text-neutral-300 hover:bg-zinc-800 hover:text-green-500 h-8 px-3"
           >
             <ArrowLeft className="w-4 h-4 mr-1" />
             Back
@@ -81,7 +81,7 @@ export function HostCredentials({ onBack, onContinue }: HostCredentialsProps) {
         </div>
 
         {/* Centered title */}
-        <h2 className="text-yellow-500 uppercase tracking-wider text-center mb-8">
+        <h2 className="text-green-500 uppercase tracking-wider text-center mb-8">
           Host Setup
         </h2>
 
@@ -98,7 +98,7 @@ export function HostCredentials({ onBack, onContinue }: HostCredentialsProps) {
               onChange={(e) => setGroupName(e.target.value.slice(0, 25))}
               placeholder="e.g. Sunday Crew"
               maxLength={25}
-              className="w-full bg-zinc-800 border-2 border-zinc-600 focus:border-yellow-500 rounded p-3 text-neutral-200 text-center outline-none transition-colors"
+              className="w-full bg-zinc-800 border-2 border-zinc-600 focus:border-green-500 rounded px-4 py-2 text-lg text-neutral-200 text-center outline-none transition-colors"
             />
           </div>
 
@@ -113,7 +113,7 @@ export function HostCredentials({ onBack, onContinue }: HostCredentialsProps) {
               onChange={(e) => handleUsernameChange(e.target.value)}
               placeholder="e.g. Jordan"
               maxLength={18}
-              className="w-full bg-zinc-800 border-2 border-zinc-600 focus:border-yellow-500 rounded p-3 text-neutral-200 text-center outline-none transition-colors"
+              className="w-full bg-zinc-800 border-2 border-zinc-600 focus:border-green-500 rounded px-4 py-2 text-lg text-neutral-200 text-center outline-none transition-colors"
             />
             {username.length > 0 && username.length < 2 && (
               <p className="text-red-400 text-xs text-center mt-1">Minimum 2 characters</p>
@@ -131,13 +131,13 @@ export function HostCredentials({ onBack, onContinue }: HostCredentialsProps) {
               >
                 <div className="bg-zinc-800 border-2 border-zinc-700 rounded p-3 text-center">
                   <p className="text-neutral-200 text-base mb-1">
-                    Join Code: <span className="text-yellow-500 font-mono tracking-widest text-xl">{joinCode}</span>
+                    Join Code: <span className="text-green-500 font-mono tracking-widest text-xl">{joinCode}</span>
                   </p>
                   <p className="text-neutral-500 text-xs">Share this code with your guests</p>
                 </div>
                 <Button
                   onClick={handleShare}
-                  className="w-full bg-gradient-to-r from-zinc-700 to-zinc-800 hover:from-zinc-600 hover:to-zinc-700 text-neutral-200 border-2 border-yellow-500 h-12"
+                  className="w-full bg-gradient-to-r from-zinc-700 to-zinc-800 hover:from-zinc-600 hover:to-zinc-700 text-neutral-200 border-2 border-green-500 h-12"
                 >
                   <Share2 className="w-4 h-4 mr-2" />
                   {copied ? 'Copied to Clipboard!' : 'Share Invite'}
@@ -155,11 +155,15 @@ export function HostCredentials({ onBack, onContinue }: HostCredentialsProps) {
                 exit={{ opacity: 0, y: 10 }}
                 className="w-full"
               >
+                {startError && (
+                  <p className="text-red-400 text-sm text-center mb-2">{startError}</p>
+                )}
                 <Button
-                  onClick={() => setShowTimerWarning(true)}
-                  className="w-full bg-gradient-to-r from-yellow-500 to-yellow-600 hover:from-yellow-600 hover:to-yellow-700 text-zinc-900 h-12 text-lg"
+                  onClick={handleConfirmStart}
+                  disabled={starting}
+                  className="w-full bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-zinc-900 h-12 text-lg disabled:opacity-60"
                 >
-                  Continue
+                  {starting ? 'Starting…' : 'Start Game'}
                 </Button>
               </motion.div>
             )}
@@ -167,60 +171,6 @@ export function HostCredentials({ onBack, onContinue }: HostCredentialsProps) {
 
         </div>
       </motion.div>
-
-      {/* Timer Warning Pop-up */}
-      <AnimatePresence>
-        {showTimerWarning && (
-          <>
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              onClick={() => setShowTimerWarning(false)}
-              className="fixed inset-0 bg-black/60 backdrop-blur-sm z-40"
-            />
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              className="fixed inset-0 z-50 flex items-center justify-center px-4"
-            >
-            <motion.div
-              initial={{ scale: 0.8 }}
-              animate={{ scale: 1 }}
-              exit={{ scale: 0.8 }}
-              transition={{ type: 'spring', damping: 25 }}
-              className="w-full max-w-md bg-zinc-800 border-2 border-yellow-500 rounded-lg p-6 text-center"
-            >
-              <h3 className="text-yellow-500 uppercase tracking-wider mb-3">Ready to Start?</h3>
-              <p className="text-neutral-400 mb-6">
-                Clicking Start Game will begin the 6-hour timer for all players. Make sure your guests have the join code before continuing.
-              </p>
-              {startError && (
-                <p className="text-red-400 text-sm text-center mb-3">{startError}</p>
-              )}
-              <div className="flex gap-3">
-                <Button
-                  onClick={() => setShowTimerWarning(false)}
-                  disabled={starting}
-                  variant="outline"
-                  className="flex-1 border-zinc-600 text-neutral-300 hover:bg-zinc-700 h-10"
-                >
-                  Cancel
-                </Button>
-                <Button
-                  onClick={handleConfirmStart}
-                  disabled={starting}
-                  className="flex-1 bg-gradient-to-r from-yellow-500 to-yellow-600 hover:from-yellow-600 hover:to-yellow-700 text-zinc-900 h-10"
-                >
-                  {starting ? 'Starting…' : 'Start Game'}
-                </Button>
-              </div>
-            </motion.div>
-            </motion.div>
-          </>
-        )}
-      </AnimatePresence>
     </div>
   );
 }

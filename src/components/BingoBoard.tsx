@@ -20,6 +20,7 @@ import { Leaderboard } from './Leaderboard';
 interface BingoBoardProps {
   sport: Sport;
   sessionInfo: SessionInfo | null;
+  username?: string;
   onBackToSports: () => void;
   onGameEnd: () => void;
 }
@@ -63,7 +64,7 @@ function WinOrExpirePopup({
   message,
   onYes,
   onNo,
-  borderColor = 'border-yellow-500',
+  borderColor = 'border-green-500',
   icon,
 }: {
   title: string;
@@ -97,7 +98,7 @@ function WinOrExpirePopup({
           <p className="text-neutral-400 mb-6">{message}</p>
           <div className="flex gap-3">
             <Button onClick={onNo} variant="outline" className="flex-1 border-zinc-600 text-neutral-300 hover:bg-zinc-700 h-10">No</Button>
-            <Button onClick={onYes} className="flex-1 bg-gradient-to-r from-yellow-500 to-yellow-600 hover:from-yellow-600 hover:to-yellow-700 text-zinc-900 h-10">Yes</Button>
+            <Button onClick={onYes} className="flex-1 bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-zinc-900 h-10">Yes</Button>
           </div>
         </motion.div>
       </motion.div>
@@ -105,7 +106,16 @@ function WinOrExpirePopup({
   );
 }
 
-export function BingoBoard({ sport, sessionInfo, onBackToSports, onGameEnd }: BingoBoardProps) {
+const SPORT_NAMES: Record<Sport, string> = {
+  soccer: 'Soccer',
+  americanFootball: 'Football',
+  baseball: 'Baseball',
+  basketball: 'Basketball',
+  rugby: 'Rugby',
+  hockey: 'Hockey',
+};
+
+export function BingoBoard({ sport, sessionInfo, username, onBackToSports, onGameEnd }: BingoBoardProps) {
   const isMultiplayer = !!sessionInfo;
   const imHost = !!sessionInfo?.isHost;
 
@@ -126,8 +136,6 @@ export function BingoBoard({ sport, sessionInfo, onBackToSports, onGameEnd }: Bi
   const [show30MinWarning, setShow30MinWarning] = useState(false);
   const [showExpiredPopup, setShowExpiredPopup] = useState(false);
   const [showMultiplayerWin, setShowMultiplayerWin] = useState(false);
-  const [showNoThanks, setShowNoThanks] = useState(false);
-  const [countdown, setCountdown] = useState(15);
 
   // UI state
   const [showBackInfo, setShowBackInfo] = useState(false);
@@ -234,19 +242,22 @@ export function BingoBoard({ sport, sessionInfo, onBackToSports, onGameEnd }: Bi
       setProgressPlayers(prev => merge(prev, [updated]));
     });
 
-    // Re-fetch after subscription is live to pick up players who joined before us.
-    // Two fetches: 1.5s and 4s, to handle slow joins and race conditions.
     const fetch = () =>
       getSessionPlayers(sessionInfo.sessionId)
         .then(players => { if (players.length > 0) setProgressPlayers(prev => merge(prev, players)); })
         .catch(() => {});
 
+    // Initial fetches to pick up players who joined before us
     const t1 = setTimeout(fetch, 1500);
     const t2 = setTimeout(fetch, 4000);
+
+    // Periodic poll every 5s to catch any missed realtime events
+    const poll = setInterval(fetch, 5000);
 
     return () => {
       clearTimeout(t1);
       clearTimeout(t2);
+      clearInterval(poll);
       supabase.removeChannel(channel);
     };
   }, [sessionInfo]);
@@ -281,20 +292,9 @@ export function BingoBoard({ sport, sessionInfo, onBackToSports, onGameEnd }: Bi
       setShowBingoMessage(true);
       setTimeout(() => setShowBingoMessage(false), 3000);
     }
-    setTimeout(() => setShowMultiplayerWin(true), 3000);
+    // setTimeout(() => setShowMultiplayerWin(true), 3000);
   }, [markedSquares]);
 
-  // No-thanks countdown
-  useEffect(() => {
-    if (!showNoThanks) return;
-    if (countdown <= 0) {
-      window.close();
-      setTimeout(() => onGameEnd(), 500);
-      return;
-    }
-    const t = setTimeout(() => setCountdown(c => c - 1), 1000);
-    return () => clearTimeout(t);
-  }, [showNoThanks, countdown]);
 
   const handleConfirmMark = (index: number) => {
     const newMarked = new Set([...markedSquares, index]);
@@ -344,19 +344,7 @@ export function BingoBoard({ sport, sessionInfo, onBackToSports, onGameEnd }: Bi
     }
   };
 
-  const handleNoThanks = () => {
-    setShowExpiredPopup(false);
-    setShowNoThanks(true);
-    setCountdown(15);
-  };
-
-  const handleWinNo = () => {
-    setShowMultiplayerWin(false);
-    if (!isMultiplayer) {
-      setShowNoThanks(true);
-      setCountdown(15);
-    }
-  };
+  const handleWinNo = () => setShowMultiplayerWin(false);
 
   if (!boardReady) {
     return (
@@ -377,7 +365,7 @@ export function BingoBoard({ sport, sessionInfo, onBackToSports, onGameEnd }: Bi
             initial={{ y: -40, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
             exit={{ y: -40, opacity: 0 }}
-            className="fixed top-14 inset-x-4 z-50 max-w-md mx-auto bg-yellow-500 text-zinc-900 rounded px-4 py-2 text-center text-sm font-medium shadow-lg"
+            className="fixed top-14 inset-x-4 z-50 max-w-md mx-auto bg-green-500 text-zinc-900 rounded px-4 py-2 text-center text-sm font-medium shadow-lg"
           >
             30 minutes until this board expires
           </motion.div>
@@ -386,12 +374,12 @@ export function BingoBoard({ sport, sessionInfo, onBackToSports, onGameEnd }: Bi
 
       {/* Expired pop-up */}
       <AnimatePresence>
-        {showExpiredPopup && !showNoThanks && (
+        {showExpiredPopup && (
           <WinOrExpirePopup
             title="Your Game Has Expired"
             message="Would you like to start a new game?"
             onYes={onGameEnd}
-            onNo={handleNoThanks}
+            onNo={() => setShowExpiredPopup(false)}
             borderColor="border-zinc-600"
           />
         )}
@@ -399,31 +387,15 @@ export function BingoBoard({ sport, sessionInfo, onBackToSports, onGameEnd }: Bi
 
       {/* Win pop-up (solo and multiplayer) */}
       <AnimatePresence>
-        {showMultiplayerWin && !showNoThanks && (
+        {showMultiplayerWin && (
           <WinOrExpirePopup
             title="Congratulations!"
             message="Would you like to start a new game?"
             onYes={onGameEnd}
             onNo={handleWinNo}
-            borderColor="border-yellow-500"
-            icon={<Trophy className="w-10 h-10 text-yellow-500" />}
+            borderColor="border-green-500"
+            icon={<Trophy className="w-10 h-10 text-green-500" />}
           />
-        )}
-      </AnimatePresence>
-
-      {/* No-thanks countdown bar */}
-      <AnimatePresence>
-        {showNoThanks && (
-          <motion.div
-            initial={{ y: -50, opacity: 0 }}
-            animate={{ y: 0, opacity: 1 }}
-            exit={{ y: -50, opacity: 0 }}
-            className="fixed top-0 inset-x-0 z-50 bg-zinc-900 text-center py-2 px-4"
-            style={{ borderBottom: '2px solid #27272a' }}
-          >
-            <span className="text-neutral-300 text-sm">Thank you for playing! </span>
-            <span className="text-neutral-500 text-sm">Closing in {countdown}s.</span>
-          </motion.div>
         )}
       </AnimatePresence>
 
@@ -437,7 +409,7 @@ export function BingoBoard({ sport, sessionInfo, onBackToSports, onGameEnd }: Bi
             transition={{ type: 'spring', duration: 0.6 }}
             className="fixed top-1/4 left-1/2 -translate-x-1/2 z-50"
           >
-            <div className="bg-gradient-to-r from-yellow-500 to-yellow-600 text-zinc-900 px-6 py-4 rounded shadow-2xl flex items-center gap-3 border-2 border-zinc-800">
+            <div className="bg-gradient-to-r from-green-500 to-green-600 text-zinc-900 px-6 py-4 rounded shadow-2xl flex items-center gap-3 border-2 border-zinc-800">
               <Trophy className="w-10 h-10" />
               <div>
                 <h2 className="mb-0.5 uppercase tracking-wider">BINGO!</h2>
@@ -449,8 +421,24 @@ export function BingoBoard({ sport, sessionInfo, onBackToSports, onGameEnd }: Bi
         )}
       </AnimatePresence>
 
+      {/* Title block — solo only */}
+      {!isMultiplayer && (
+        <motion.div
+          initial={{ y: -20, opacity: 0 }}
+          animate={{ y: 0, opacity: 1 }}
+          className="text-center pt-2 mb-1"
+        >
+          <h2 className="text-green-500 uppercase tracking-wider text-base">
+            {SPORT_NAMES[sport].toUpperCase()} BINGO
+          </h2>
+          {username && (
+            <p className="text-neutral-500 text-xs mt-0.5">{username}'s Board</p>
+          )}
+        </motion.div>
+      )}
+
       {/* Header */}
-      <div className="flex items-center justify-between mb-2 pt-2">
+      <div className="relative flex items-center justify-between mb-1">
 
         {/* Left: Back + optional (i) + Start New Game (multiplayer winner) */}
         <div className="flex flex-col items-start gap-0.5">
@@ -458,7 +446,7 @@ export function BingoBoard({ sport, sessionInfo, onBackToSports, onGameEnd }: Bi
             <Button
               onClick={onBackToSports}
               variant="ghost"
-              className="text-neutral-300 hover:bg-zinc-800 hover:text-yellow-500 h-8 px-3"
+              className="text-neutral-300 hover:bg-zinc-800 hover:text-green-500 h-8 px-3"
             >
               <ArrowLeft className="w-4 h-4 mr-1" />
               Back
@@ -466,7 +454,7 @@ export function BingoBoard({ sport, sessionInfo, onBackToSports, onGameEnd }: Bi
             {(!isMultiplayer || imHost) && (
               <button
                 onClick={() => setShowBackInfo(true)}
-                className="text-neutral-500 hover:text-yellow-500 transition-colors"
+                className="text-neutral-500 hover:text-green-500 transition-colors"
                 aria-label="Back info"
               >
                 <Info className="w-4 h-4" />
@@ -477,63 +465,61 @@ export function BingoBoard({ sport, sessionInfo, onBackToSports, onGameEnd }: Bi
             <Button
               onClick={onGameEnd}
               variant="ghost"
-              className="text-yellow-500 hover:bg-zinc-800 hover:text-yellow-400 h-7 px-3 text-xs"
+              className="text-green-500 hover:bg-zinc-800 hover:text-green-400 h-7 px-3 text-xs"
             >
               Start New Game
             </Button>
           )}
         </div>
 
-        {/* Center: sport title (solo) or empty (multiplayer) */}
-        {!isMultiplayer && (
-          <motion.h2
-            initial={{ y: -20, opacity: 0 }}
-            animate={{ y: 0, opacity: 1 }}
-            className="text-yellow-500 capitalize uppercase tracking-wider"
+        {/* Center: SPORT BINGO — absolutely centered so it ignores left/right widths */}
+        {isMultiplayer && (
+          <h2
+            className="absolute text-green-500 uppercase tracking-wider text-base text-center whitespace-nowrap pointer-events-none"
+            style={{ left: '50%', transform: 'translateX(-50%)' }}
           >
-            {sport} Bingo
-          </motion.h2>
+            {SPORT_NAMES[sport].toUpperCase()} BINGO
+          </h2>
         )}
-        {isMultiplayer && <div />}
 
-        {/* Right: Restart (solo), Share (host), empty (guest) */}
+        {/* Right: Restart (solo), Share + join code (host), spacer (guest) */}
         {!isMultiplayer && (
           <Button
             onClick={handleRestart}
             variant="ghost"
-            className="text-neutral-300 hover:bg-zinc-800 hover:text-yellow-500 h-8 px-3"
+            className="text-neutral-300 hover:bg-zinc-800 hover:text-green-500 h-8 px-3"
           >
             <RotateCcw className="w-4 h-4 mr-1" />
             Restart
           </Button>
         )}
         {imHost && (
-          <Button
-            onClick={handleShare}
-            variant="ghost"
-            className="text-neutral-300 hover:text-yellow-500 hover:bg-zinc-800 h-8 px-3 border border-zinc-700"
-          >
-            <Share2 className="w-4 h-4 mr-2" />
-            <span className="text-xs">{copied ? 'Copied!' : 'Share'}</span>
-          </Button>
+          <div className="flex flex-col items-end gap-1">
+            <Button
+              onClick={handleShare}
+              variant="ghost"
+              className="text-neutral-300 hover:text-green-500 hover:bg-zinc-800 h-8 px-3 border border-zinc-700"
+            >
+              <Share2 className="w-4 h-4 mr-2" />
+              <span className="text-xs">{copied ? 'Copied!' : 'Share'}</span>
+            </Button>
+            {sessionInfo?.joinCode && (
+              <p className="text-neutral-400 text-xs font-mono tracking-widest pr-1">
+                <span className="text-green-500">{sessionInfo.joinCode}</span>
+              </p>
+            )}
+          </div>
         )}
         {!imHost && isMultiplayer && <div className="w-16" />}
       </div>
 
-      {/* Multiplayer subheader */}
+      {/* Multiplayer subtitle: team name + role/username */}
       {isMultiplayer && (
-        <div className="text-center mb-3">
-          <p className="text-yellow-500 uppercase tracking-wider text-base font-medium">
-            Team {sessionInfo?.groupName}
-          </p>
+        <div className="text-center mb-1">
+          <p className="text-neutral-300 text-sm uppercase tracking-wider">{sessionInfo?.groupName}</p>
           <p className="text-neutral-500 text-xs mt-0.5">
-            {imHost ? 'I am the host' : `${sessionInfo?.initials}'s Board`}
+            {imHost ? `Host: ${username}` : `${sessionInfo?.initials}'s Board`}
           </p>
-          {imHost && sessionInfo?.joinCode && (
-            <p className="text-neutral-400 text-xs mt-1 font-mono tracking-widest">
-              Join Code: <span className="text-yellow-500">{sessionInfo.joinCode}</span>
-            </p>
-          )}
         </div>
       )}
 
@@ -580,10 +566,10 @@ export function BingoBoard({ sport, sessionInfo, onBackToSports, onGameEnd }: Bi
               animate={{ y: 0, opacity: 1 }}
               exit={{ y: '100%', opacity: 0 }}
               transition={{ type: 'spring', damping: 25 }}
-              className="fixed inset-x-0 bottom-0 z-50 bg-zinc-800 border-t-4 border-yellow-500 rounded-t-lg p-5"
+              className="fixed inset-x-0 bottom-0 z-50 bg-zinc-800 border-t-4 border-green-500 rounded-t-lg p-5"
             >
               <div className="max-w-md mx-auto text-center">
-                <h3 className="text-yellow-500 uppercase tracking-wider mb-3">
+                <h3 className="text-green-500 uppercase tracking-wider mb-3">
                   {isMultiplayer ? 'Heads Up' : 'Going Back?'}
                 </h3>
                 <p className="text-neutral-400 mb-6">
@@ -593,7 +579,7 @@ export function BingoBoard({ sport, sessionInfo, onBackToSports, onGameEnd }: Bi
                 </p>
                 <Button
                   onClick={() => setShowBackInfo(false)}
-                  className="w-full bg-gradient-to-r from-yellow-500 to-yellow-600 hover:from-yellow-600 hover:to-yellow-700 text-zinc-900 h-10"
+                  className="w-full bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-zinc-900 h-10"
                 >
                   Got It
                 </Button>
@@ -620,7 +606,7 @@ export function BingoBoard({ sport, sessionInfo, onBackToSports, onGameEnd }: Bi
                 animate={{ y: 0, opacity: 1 }}
                 exit={{ y: '100%', opacity: 0 }}
                 transition={{ type: 'spring', damping: 25 }}
-                className="fixed inset-x-0 bottom-0 z-50 bg-zinc-800 border-t-4 border-yellow-500 rounded-t-lg p-5 overflow-y-auto" style={{ maxHeight: '80vh' }}
+                className="fixed inset-x-0 bottom-0 z-50 bg-zinc-800 border-t-4 border-green-500 rounded-t-lg p-5 overflow-y-auto" style={{ maxHeight: '80vh' }}
               >
                 <div className="max-w-md mx-auto">
                   <div className="flex justify-center mb-4">
@@ -628,7 +614,7 @@ export function BingoBoard({ sport, sessionInfo, onBackToSports, onGameEnd }: Bi
                       initial={{ scale: 0, rotate: -180 }}
                       animate={{ scale: 1, rotate: 0 }}
                       transition={{ type: 'spring' }}
-                      className="bg-gradient-to-br from-yellow-500 to-yellow-600 p-4 rounded border-2 border-zinc-700"
+                      className="bg-gradient-to-br from-green-500 to-green-600 p-4 rounded border-2 border-zinc-700"
                     >
                       {IconComponent && <IconComponent className="w-12 h-12 text-zinc-900" />}
                     </motion.div>
@@ -658,7 +644,7 @@ export function BingoBoard({ sport, sessionInfo, onBackToSports, onGameEnd }: Bi
                     ) : (
                       <Button
                         onClick={() => handleConfirmMark(expandedSquare)}
-                        className="flex-1 bg-gradient-to-r from-yellow-500 to-yellow-600 hover:from-yellow-600 hover:to-yellow-700 text-zinc-900 h-10"
+                        className="flex-1 bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-zinc-900 h-10"
                       >
                         Mark Square
                       </Button>

@@ -117,32 +117,32 @@ const basketballItems: BingoItem[] = [
   { name: 'Bank Shot', icon: Goal, description: 'The ball bounces off the backboard into the hoop.' },
 ];
 
-const tennisItems: BingoItem[] = [
-  { name: 'Ace', icon: Rocket, description: 'A serve that the opponent cannot touch!' },
-  { name: 'Double Fault', icon: Flame, description: 'Two consecutive serving faults.' },
-  { name: 'Break Point', icon: Zap, description: 'An opportunity to win the opponent\'s serve game.' },
-  { name: 'Deuce', icon: Circle, description: 'The score is tied at 40-40.' },
-  { name: 'Volley', icon: Activity, description: 'Hitting the ball before it bounces.' },
-  { name: 'Lob', icon: CircleDot, description: 'A high, arcing shot over the opponent.' },
-  { name: 'Smash', icon: Trophy, description: 'A powerful overhead shot.' },
-  { name: 'Drop Shot', icon: Target, description: 'A soft shot that barely clears the net.' },
-  { name: 'Backhand', icon: Award, description: 'A shot hit with the back of the hand facing forward.' },
-  { name: 'Forehand', icon: Shield, description: 'A shot hit with the palm facing forward.' },
-  { name: 'Let', icon: Radio, description: 'A serve that touches the net but lands in.' },
-  { name: 'Rally', icon: Users, description: 'A long exchange of shots between players.' },
+const rugbyItems: BingoItem[] = [
+  { name: 'Try', icon: Rocket, description: 'A player grounds the ball over the try line for 5 points!' },
+  { name: 'Conversion', icon: Target, description: 'A kick at goal after a try, worth 2 points.' },
+  { name: 'Penalty Kick', icon: Crosshair, description: 'A kick at goal from a penalty, worth 3 points.' },
+  { name: 'Drop Goal', icon: CircleDot, description: 'A drop-kick through the uprights during open play, worth 3 points.' },
+  { name: 'Scrum', icon: Users, description: 'A set piece where forwards bind together and contest for the ball.' },
+  { name: 'Lineout', icon: Flag, description: 'The ball is thrown in from the sideline after going out of play.' },
+  { name: 'Ruck', icon: Activity, description: 'Players contest for the ball on the ground after a tackle.' },
+  { name: 'Maul', icon: Shield, description: 'A standing battle for possession where players bind together.' },
+  { name: 'Tackle', icon: Diamond, description: 'A ball carrier is brought to the ground by an opponent.' },
+  { name: 'Turnover', icon: Zap, description: 'Possession changes hands at the breakdown.' },
+  { name: 'Yellow Card', icon: Square, description: 'A player is sin-binned for 10 minutes.' },
+  { name: 'Red Card', icon: Flame, description: 'A player is sent off for the rest of the match.' },
   { name: 'Free Space', icon: Star, description: 'Free space - automatically marked!' },
-  { name: 'Net Play', icon: Flag, description: 'Aggressive play close to the net.' },
-  { name: 'Baseline', icon: Box, description: 'Playing from the back of the court.' },
-  { name: 'Tiebreak', icon: Crown, description: 'A special game to decide a tied set.' },
-  { name: 'Winner', icon: Goal, description: 'A shot the opponent cannot return.' },
-  { name: 'Unforced Error', icon: Diamond, description: 'A mistake made without pressure.' },
-  { name: 'Challenge', icon: Crosshair, description: 'A player challenges a line call.' },
-  { name: 'Service Game', icon: Shirt, description: 'A game where a player is serving.' },
-  { name: 'Match Point', icon: Star, description: 'One point away from winning the match!' },
-  { name: 'Love', icon: Heart, description: 'A score of zero in tennis.' },
-  { name: 'Slice', icon: CircleDot, description: 'A shot with backspin.' },
-  { name: 'Crosscourt', icon: Flame, description: 'A shot hit diagonally across the court.' },
-  { name: 'Grand Slam', icon: Trophy, description: 'Winning all four major tournaments!' },
+  { name: 'Sin Bin', icon: Timer, description: 'A player serves time off the field for foul play.' },
+  { name: 'High Tackle', icon: Heart, description: 'A dangerous tackle above the shoulders.' },
+  { name: 'Offside', icon: Radio, description: 'A player is penalized for being in an offside position.' },
+  { name: 'Knock-On', icon: Circle, description: 'The ball is knocked forward by a player\'s hand or arm.' },
+  { name: 'Forward Pass', icon: Box, description: 'An illegal pass thrown toward the opponent\'s goal line.' },
+  { name: 'Substitution', icon: Shirt, description: 'A player is replaced by a substitute.' },
+  { name: 'Garryowen', icon: Crown, description: 'A high up-and-under kick allowing forwards to charge the catcher.' },
+  { name: 'Grubber Kick', icon: Goal, description: 'A low kick along the ground through the defence.' },
+  { name: 'Penalty Try', icon: Award, description: 'A try awarded when foul play prevented a certain score.' },
+  { name: 'TMO Review', icon: Trophy, description: 'The Television Match Official reviews a decision on the big screen.' },
+  { name: 'Hat Trick', icon: Rocket, description: 'A player scores three tries in one match!' },
+  { name: 'Injury', icon: Home, description: 'A player goes down requiring medical attention.' },
 ];
 
 const hockeyItems: BingoItem[] = [
@@ -211,8 +211,8 @@ export function getBingoItems(sport: Sport): BingoItem[] {
       return baseballItems;
     case 'basketball':
       return basketballItems;
-    case 'tennis':
-      return tennisItems;
+    case 'rugby':
+      return rugbyItems;
     case 'hockey':
       return hockeyItems;
     default:

@@ -5,10 +5,11 @@ import { HostCredentials } from './components/HostCredentials';
 import { MultiplayerCodeLogin } from './components/MultiplayerCodeLogin';
 import { GuestLogin } from './components/GuestLogin';
 import { BingoBoard } from './components/BingoBoard';
+import { FAQ } from './components/FAQ';
 import { useAuth } from './hooks/useAuth';
-import { createMultiplayerSession, loginAsHost, rejoinSession } from './lib/sessions';
+import { createMultiplayerSession, loginAsHost, rejoinSession, joinSessionByCode } from './lib/sessions';
 
-export type Sport = 'soccer' | 'americanFootball' | 'baseball' | 'basketball' | 'tennis' | 'hockey';
+export type Sport = 'soccer' | 'americanFootball' | 'baseball' | 'basketball' | 'rugby' | 'hockey';
 
 type AppView =
   | 'session-lobby'
@@ -16,6 +17,7 @@ type AppView =
   | 'host-credentials'
   | 'multiplayer-code-login'
   | 'guest-login'
+  | 'faq'
   | 'game';
 
 type SessionMode = 'solo' | 'multiplayer-create';
@@ -60,6 +62,7 @@ export default function App() {
   const [sessionMode, setSessionMode] = useState<SessionMode>('solo');
   const [selectedSport, setSelectedSport] = useState<Sport | null>(null);
   const [sessionInfo, setSessionInfo] = useState<SessionInfo | null>(null);
+  const [username, setUsername] = useState('');
   const [defaultJoinCode, setDefaultJoinCode] = useState<string | undefined>(undefined);
 
   const [reconnecting, setReconnecting] = useState(() => {
@@ -128,19 +131,32 @@ export default function App() {
   }, [user, loading]);
 
   // --- Session Lobby ---
-  const handleSolo = () => {
+  const handleSolo = (name: string) => {
+    setUsername(name);
     setSessionMode('solo');
     setView('sport-selection');
   };
 
-  const handleMultiplayerCreate = () => {
+  const handleMultiplayerCreate = (name: string) => {
+    setUsername(name);
     setSessionMode('multiplayer-create');
     setView('sport-selection');
   };
 
-  const handleJoinReady = (sessionId: number, playerId: number, sport: Sport) => {
-    setSelectedSport(sport);
-    setSessionInfo({ sessionId, playerId });
+  const handleJoin = async (name: string, code: string) => {
+    if (!user) return;
+    const { session, player } = await joinSessionByCode(code, user.id, name);
+    setUsername(name);
+    setSelectedSport(session.sport as Sport);
+    setSessionInfo({
+      sessionId: session.id,
+      playerId: player.id,
+      groupName: session.group_name,
+      initials: name,
+      isHost: false,
+      joinCode: code,
+    });
+    saveSession(code, false);
     setView('game');
   };
 
@@ -237,8 +253,12 @@ export default function App() {
             user={user}
             onSolo={handleSolo}
             onMultiplayerCreate={handleMultiplayerCreate}
-            onJoinReady={handleJoinReady}
+            onJoin={handleJoin}
+            onFaq={() => setView('faq')}
           />
+        )}
+        {view === 'faq' && (
+          <FAQ onBack={handleBackToLobby} />
         )}
         {view === 'sport-selection' && (
           <SportSelection onSelectSport={handleSportSelect} onBack={handleBackToLobby} />
@@ -247,6 +267,7 @@ export default function App() {
           <HostCredentials
             onBack={handleBackToSportSelection}
             onContinue={handleCredentialsComplete}
+            defaultUsername={username}
           />
         )}
         {view === 'multiplayer-code-login' && (
@@ -261,7 +282,8 @@ export default function App() {
           <GuestLogin
             user={user}
             defaultJoinCode={defaultJoinCode}
-            onBack={() => setView('multiplayer-code-login')}
+            defaultUsername={username}
+            onBack={handleBackToLobby}
             onJoined={handleGuestJoined}
           />
         )}
@@ -269,6 +291,7 @@ export default function App() {
           <BingoBoard
             sport={selectedSport}
             sessionInfo={sessionInfo}
+            username={username}
             onBackToSports={
               sessionInfo
                 ? handleBackToMultiplayerLogin

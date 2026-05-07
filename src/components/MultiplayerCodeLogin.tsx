@@ -97,19 +97,19 @@ export function MultiplayerCodeLogin({
           <Button
             onClick={() => setShowBackConfirm(true)}
             variant="ghost"
-            className="text-neutral-300 hover:bg-zinc-800 hover:text-yellow-500 h-8 px-3"
+            className="text-neutral-300 hover:bg-zinc-800 hover:text-green-500 h-8 px-3"
           >
             ← Back to Start
           </Button>
           <button
             onClick={() => setShowInfo(true)}
-            className="text-neutral-500 hover:text-yellow-500 transition-colors p-1"
+            className="text-neutral-500 hover:text-green-500 transition-colors p-1"
             aria-label="Warning info"
           >
             <Info className="w-4 h-4" />
           </button>
         </div>
-        <h2 className="text-yellow-500 uppercase tracking-wider mx-auto pr-16">
+        <h2 className="text-green-500 uppercase tracking-wider mx-auto pr-16">
           Join Game
         </h2>
       </div>
@@ -124,13 +124,13 @@ export function MultiplayerCodeLogin({
           <div className="w-full flex flex-col gap-3">
             <Button
               onClick={() => { setShowHostPopup(true); setHostError(null); setHostCodeInput(''); }}
-              className="w-full bg-gradient-to-r from-zinc-700 to-zinc-800 hover:from-zinc-600 hover:to-zinc-700 text-neutral-200 border-2 border-yellow-500 h-14 text-lg"
+              className="w-full bg-gradient-to-r from-zinc-700 to-zinc-800 hover:from-zinc-600 hover:to-zinc-700 text-neutral-200 border-2 border-green-500 h-14 text-lg"
             >
               I'm the Host
             </Button>
             <Button
               onClick={() => { setShowPlayerPopup(true); setPlayerError(null); setPlayerCodeInput(''); }}
-              className="w-full bg-gradient-to-r from-zinc-700 to-zinc-800 hover:from-zinc-600 hover:to-zinc-700 text-neutral-200 border-2 border-yellow-500 h-14 text-lg"
+              className="w-full bg-gradient-to-r from-zinc-700 to-zinc-800 hover:from-zinc-600 hover:to-zinc-700 text-neutral-200 border-2 border-green-500 h-14 text-lg"
             >
               I'm a Player
             </Button>
@@ -152,16 +152,16 @@ export function MultiplayerCodeLogin({
               animate={{ y: 0, opacity: 1 }}
               exit={{ y: '100%', opacity: 0 }}
               transition={{ type: 'spring', damping: 25 }}
-              className="fixed inset-x-0 bottom-0 z-50 bg-zinc-800 border-t-4 border-yellow-500 rounded-t-lg p-5"
+              className="fixed inset-x-0 bottom-0 z-50 bg-zinc-800 border-t-4 border-green-500 rounded-t-lg p-5"
             >
               <div className="max-w-md mx-auto text-center">
-                <h3 className="text-yellow-500 uppercase tracking-wider mb-3">Heads Up</h3>
+                <h3 className="text-green-500 uppercase tracking-wider mb-3">Heads Up</h3>
                 <p className="text-neutral-400 mb-6">
                   Tapping "Back to Start" will return you to the lobby and remove you from this session. Your progress will be lost and you will not be able to rejoin without the original invite link.
                 </p>
                 <Button
                   onClick={() => setShowInfo(false)}
-                  className="w-full bg-gradient-to-r from-yellow-500 to-yellow-600 hover:from-yellow-600 hover:to-yellow-700 text-zinc-900 h-10"
+                  className="w-full bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-zinc-900 h-10"
                 >
                   Got It
                 </Button>
@@ -238,9 +238,9 @@ export function MultiplayerCodeLogin({
                 animate={{ scale: 1 }}
                 exit={{ scale: 0.8 }}
                 transition={{ type: 'spring', damping: 25 }}
-                className="w-full max-w-md bg-zinc-800 border-2 border-yellow-500 rounded-lg p-6 text-center"
+                className="w-full max-w-md bg-zinc-800 border-2 border-green-500 rounded-lg p-6 text-center"
               >
-                <h3 className="text-yellow-500 uppercase tracking-wider mb-4">Enter Join Code</h3>
+                <h3 className="text-green-500 uppercase tracking-wider mb-4">Enter Join Code</h3>
                 <input
                   type="text"
                   inputMode="text"
@@ -250,7 +250,7 @@ export function MultiplayerCodeLogin({
                   placeholder="• • • • • •"
                   maxLength={6}
                   autoFocus
-                  className="w-full bg-zinc-900 border-2 border-zinc-600 focus:border-yellow-500 rounded p-3 text-neutral-200 text-2xl text-center font-mono tracking-widest outline-none transition-colors mb-2"
+                  className="w-full bg-zinc-900 border-2 border-zinc-600 focus:border-green-500 rounded p-3 text-neutral-200 text-2xl text-center font-mono tracking-widest outline-none transition-colors mb-2"
                 />
                 {hostError && <p className="text-red-400 text-sm mt-1 mb-2">{hostError}</p>}
                 <div className="flex gap-3 mt-4">
@@ -264,7 +264,7 @@ export function MultiplayerCodeLogin({
                   <Button
                     onClick={handleHostCodeSubmit}
                     disabled={loading || hostCodeInput.trim().length < 6}
-                    className="flex-1 bg-gradient-to-r from-yellow-500 to-yellow-600 hover:from-yellow-600 hover:to-yellow-700 text-zinc-900 h-10 disabled:opacity-50"
+                    className="flex-1 bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-zinc-900 h-10 disabled:opacity-50"
                   >
                     {loading ? 'Checking...' : 'Enter'}
                   </Button>
@@ -295,9 +295,9 @@ export function MultiplayerCodeLogin({
                 animate={{ scale: 1 }}
                 exit={{ scale: 0.8 }}
                 transition={{ type: 'spring', damping: 25 }}
-                className="w-full max-w-md bg-zinc-800 border-2 border-yellow-500 rounded-lg p-6 text-center"
+                className="w-full max-w-md bg-zinc-800 border-2 border-green-500 rounded-lg p-6 text-center"
               >
-                <h3 className="text-yellow-500 uppercase tracking-wider mb-4">Enter Join Code</h3>
+                <h3 className="text-green-500 uppercase tracking-wider mb-4">Enter Join Code</h3>
                 <input
                   type="text"
                   inputMode="text"
@@ -307,7 +307,7 @@ export function MultiplayerCodeLogin({
                   placeholder="• • • • • •"
                   maxLength={6}
                   autoFocus
-                  className="w-full bg-zinc-900 border-2 border-zinc-600 focus:border-yellow-500 rounded p-3 text-neutral-200 text-2xl text-center font-mono tracking-widest outline-none transition-colors mb-2"
+                  className="w-full bg-zinc-900 border-2 border-zinc-600 focus:border-green-500 rounded p-3 text-neutral-200 text-2xl text-center font-mono tracking-widest outline-none transition-colors mb-2"
                 />
                 {playerError && <p className="text-red-400 text-sm mt-1 mb-2">{playerError}</p>}
                 <div className="flex gap-3 mt-4">
@@ -321,7 +321,7 @@ export function MultiplayerCodeLogin({
                   <Button
                     onClick={handlePlayerCodeSubmit}
                     disabled={loading || playerCodeInput.trim().length < 6}
-                    className="flex-1 bg-gradient-to-r from-yellow-500 to-yellow-600 hover:from-yellow-600 hover:to-yellow-700 text-zinc-900 h-10 disabled:opacity-50"
+                    className="flex-1 bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-zinc-900 h-10 disabled:opacity-50"
                   >
                     {loading ? 'Finding...' : 'Enter'}
                   </Button>

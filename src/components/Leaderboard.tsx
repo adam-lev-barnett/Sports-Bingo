@@ -40,7 +40,7 @@ function MiniGrid({ markedSquares }: { markedSquares: number[] }) {
             height: '9px',
             borderRadius: '1px',
             flexShrink: 0,
-            backgroundColor: marked.has(i) ? '#eab308' : '#52525b',
+            backgroundColor: marked.has(i) ? '#17BB34' : '#52525b',
           }}
         />
       ))}
@@ -76,12 +76,12 @@ export function Leaderboard({ players, myId, myMarkedSquares }: LeaderboardProps
             <div
               key={player.id}
               className={`rounded px-2 py-2 ${isMe ? 'bg-zinc-800 border' : 'bg-zinc-800/50'}`}
-              style={isMe ? { borderColor: 'rgba(234,179,8,0.4)' } : undefined}
+              style={isMe ? { borderColor: 'rgba(23,187,52,0.4)' } : undefined}
             >
               <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '6px' }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '3px', minWidth: 0 }}>
                   {medal && <span style={{ fontSize: '13px', lineHeight: 1, flexShrink: 0 }}>{medal}</span>}
-                  <span className={`text-xs font-mono truncate ${isMe ? 'text-yellow-400' : 'text-neutral-300'}`}>
+                  <span className={`text-xs font-mono truncate ${isMe ? 'text-green-400' : 'text-neutral-300'}`}>
                     {label}
                   </span>
                 </div>

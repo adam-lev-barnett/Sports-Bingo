@@ -19,14 +19,13 @@ export function BingoSquare({ item, isMarked, isFreeSpace, onClick }: BingoSquar
       className={`
         relative aspect-square rounded p-1.5 flex flex-col items-center justify-center
         transition-all duration-300
-        ${isFreeSpace 
-          ? 'bg-gradient-to-br from-yellow-500 to-yellow-600 border border-zinc-700' 
-          : isMarked 
-            ? 'bg-gradient-to-br from-yellow-500 to-yellow-600 border border-zinc-700' 
-            : 'bg-zinc-700 hover:bg-zinc-600 border border-zinc-600'
+        ${isFreeSpace || isMarked
+          ? 'border border-zinc-700'
+          : 'bg-zinc-700 hover:bg-zinc-600 border border-zinc-600'
         }
         shadow-md hover:shadow-lg
       `}
+      style={isFreeSpace || isMarked ? { background: 'linear-gradient(to bottom right, #17BB34, #14a12d)' } : undefined}
     >
       {/* Icon */}
       {isFreeSpace ? (
@@ -45,7 +44,7 @@ export function BingoSquare({ item, isMarked, isFreeSpace, onClick }: BingoSquar
         <motion.div
           initial={{ scale: 0 }}
           animate={{ scale: 1 }}
-          className="absolute inset-0 flex items-center justify-center rounded border border-zinc-700" style={{ backgroundColor: 'rgba(234,179,8,0.9)' }}
+          className="absolute inset-0 flex items-center justify-center rounded border border-zinc-700" style={{ backgroundColor: 'rgba(23,187,52,0.9)' }}
         >
           <Check className="w-6 h-6 text-zinc-900" strokeWidth={3} />
         </motion.div>

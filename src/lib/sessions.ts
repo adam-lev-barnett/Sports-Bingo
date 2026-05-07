@@ -139,7 +139,7 @@ export async function joinSessionByCode(joinCode: string, userId: string, initia
     .eq('session_id', session.id);
 
   if (countError) throw new Error('Could not load session players');
-  if ((count ?? 0) >= 5) throw new Error('This session is full (max 5 players)');
+  if ((count ?? 0) >= 6) throw new Error('This session is full (max 6 players)');
 
   const now = new Date().toISOString();
   const nextPlayerNumber = (count ?? 0) + 1;

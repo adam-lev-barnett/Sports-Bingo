@@ -1,0 +1,116 @@
+import { useState } from 'react';
+import { motion, AnimatePresence } from 'motion/react';
+import { ArrowLeft, ChevronDown } from 'lucide-react';
+import { Button } from './ui/button';
+
+interface FAQProps {
+  onBack: () => void;
+}
+
+const faqs = [
+  {
+    q: 'How do I play Sports Bingo?',
+    a: 'Pick a sport, then mark off squares on your bingo board as those events happen during a live game. Get five in a row — horizontally, vertically, or diagonally — to win!',
+  },
+  {
+    q: 'What is the Free Space?',
+    a: 'The center square is a Free Space and is automatically marked for you at the start of every game.',
+  },
+  {
+    q: 'How do I mark a square?',
+    a: 'Tap any square to see its description, then confirm to mark it. You can also unmark a square if you made a mistake.',
+  },
+  {
+    q: 'How do I create a multiplayer game?',
+    a: 'Choose Multiplayer from the lobby, set your team name and username, then share the generated game code with your friends.',
+  },
+  {
+    q: 'How do I join a multiplayer game?',
+    a: 'Tap Join Game in the lobby and enter the 6-character code your host shared with you.',
+  },
+  {
+    q: 'How long does a multiplayer session last?',
+    a: 'Multiplayer sessions expire after 6 hours. You\'ll get a 30-minute warning before time runs out.',
+  },
+  {
+    q: 'Can I rejoin a game if I leave?',
+    a: 'Yes! Your progress is saved. If you close the app and come back, you\'ll be taken straight back to your game automatically.',
+  },
+  {
+    q: 'What happens when someone gets Bingo?',
+    a: 'You\'ll see a congratulations screen. You can choose to start a fresh new game or keep your current board.',
+  },
+];
+
+export function FAQ({ onBack }: FAQProps) {
+  const [open, setOpen] = useState<number | null>(null);
+
+  return (
+    <div className="min-h-screen flex flex-col p-4">
+      <div className="w-full max-w-md mx-auto">
+        <div className="mb-4">
+          <Button
+            onClick={onBack}
+            variant="ghost"
+            className="text-neutral-300 hover:bg-zinc-800 hover:text-green-500 h-8 px-3"
+          >
+            <ArrowLeft className="w-4 h-4 mr-1" />
+            Back
+          </Button>
+        </div>
+
+        <motion.div
+          initial={{ scale: 0.9, opacity: 0 }}
+          animate={{ scale: 1, opacity: 1 }}
+        >
+          <div className="text-center mb-8">
+            <h2 className="text-green-500 uppercase tracking-wider mb-1">FAQs</h2>
+            <div className="h-1 w-20 bg-green-500 mx-auto mb-3" />
+            <p className="text-neutral-400 text-sm">Frequently asked questions</p>
+          </div>
+
+          <div className="flex flex-col gap-2">
+            {faqs.map((faq, i) => (
+              <motion.div
+                key={i}
+                initial={{ x: -20, opacity: 0 }}
+                animate={{ x: 0, opacity: 1 }}
+                transition={{ delay: i * 0.05 }}
+                className="bg-zinc-800 border border-zinc-700 rounded overflow-hidden"
+              >
+                <button
+                  onClick={() => setOpen(open === i ? null : i)}
+                  className="w-full flex items-center justify-between p-4 text-left text-neutral-200 hover:bg-zinc-700/50 transition-colors"
+                >
+                  <span className="text-sm font-medium pr-2">{faq.q}</span>
+                  <motion.div
+                    animate={{ rotate: open === i ? 180 : 0 }}
+                    transition={{ duration: 0.2 }}
+                    className="shrink-0"
+                  >
+                    <ChevronDown className="w-4 h-4 text-neutral-400" />
+                  </motion.div>
+                </button>
+                <AnimatePresence>
+                  {open === i && (
+                    <motion.div
+                      initial={{ height: 0, opacity: 0 }}
+                      animate={{ height: 'auto', opacity: 1 }}
+                      exit={{ height: 0, opacity: 0 }}
+                      transition={{ duration: 0.2 }}
+                      className="overflow-hidden"
+                    >
+                      <p className="text-neutral-400 text-sm px-4 pb-4 leading-relaxed">
+                        {faq.a}
+                      </p>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+              </motion.div>
+            ))}
+          </div>
+        </motion.div>
+      </div>
+    </div>
+  );
+}

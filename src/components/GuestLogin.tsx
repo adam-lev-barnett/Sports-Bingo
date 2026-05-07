@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { motion } from 'motion/react';
+import { ArrowLeft } from 'lucide-react';
 import { User as SupabaseUser } from '@supabase/supabase-js';
 import { Button } from './ui/button';
 import { joinSessionByCode } from '../lib/sessions';
@@ -8,13 +9,14 @@ import { SessionInfo, Sport } from '../App';
 interface GuestLoginProps {
   user: SupabaseUser;
   defaultJoinCode?: string;
+  defaultUsername?: string;
   onBack: () => void;
   onJoined: (sessionInfo: SessionInfo, sport: Sport) => void;
 }
 
-export function GuestLogin({ user, defaultJoinCode, onJoined }: GuestLoginProps) {
-  const [username, setUsername] = useState('');
-  const [joinCode, setJoinCode] = useState('');
+export function GuestLogin({ user, defaultJoinCode, defaultUsername, onBack, onJoined }: GuestLoginProps) {
+  const [username, setUsername] = useState(defaultUsername ?? '');
+  const [joinCode, setJoinCode] = useState(defaultJoinCode ?? '');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -22,8 +24,7 @@ export function GuestLogin({ user, defaultJoinCode, onJoined }: GuestLoginProps)
 
   const handleUsernameChange = (val: string) => {
     const trimmed = val.slice(0, 18);
-    if (!trimmed) { setUsername(''); return; }
-    setUsername(trimmed[0].toUpperCase() + trimmed.slice(1).toLowerCase());
+    setUsername(trimmed.split(' ').map(w => w ? w[0].toUpperCase() + w.slice(1).toLowerCase() : '').join(' '));
   };
 
   const handleContinue = async () => {
@@ -57,8 +58,18 @@ export function GuestLogin({ user, defaultJoinCode, onJoined }: GuestLoginProps)
         animate={{ scale: 1, opacity: 1 }}
         className="w-full max-w-md"
       >
+        <div className="mb-4">
+          <Button
+            onClick={onBack}
+            variant="ghost"
+            className="text-neutral-300 hover:bg-zinc-800 hover:text-green-500 h-8 px-3"
+          >
+            <ArrowLeft className="w-4 h-4 mr-1" />
+            Back
+          </Button>
+        </div>
         <div className="text-center mb-8">
-          <h1 className="text-yellow-500 uppercase tracking-widest text-3xl font-bold mb-3">
+          <h1 className="text-green-500 uppercase tracking-widest text-3xl font-bold mb-3">
             Welcome!
           </h1>
           <p className="text-neutral-200 text-sm leading-relaxed">
@@ -79,7 +90,7 @@ export function GuestLogin({ user, defaultJoinCode, onJoined }: GuestLoginProps)
               onChange={(e) => handleUsernameChange(e.target.value)}
               placeholder="e.g. Jordan"
               maxLength={18}
-              className="w-full bg-zinc-800 border-2 border-zinc-600 focus:border-yellow-500 rounded p-3 text-neutral-200 text-center outline-none transition-colors"
+              className="w-full bg-zinc-800 border-2 border-zinc-600 focus:border-green-500 rounded px-4 py-2 text-lg text-neutral-200 text-center outline-none transition-colors"
             />
             {username.length > 0 && username.length < 2 && (
               <p className="text-red-400 text-xs text-center mt-1">Minimum 2 characters</p>
@@ -99,9 +110,9 @@ export function GuestLogin({ user, defaultJoinCode, onJoined }: GuestLoginProps)
                 e.target.value.toUpperCase().replace(/[^ABCDEFGHJKLMNPQRSTUVWXYZ23456789]/g, '').slice(0, 6)
               )}
               onKeyDown={(e) => e.key === 'Enter' && isValid && handleContinue()}
-              placeholder="• • • • • •"
+              placeholder=""
               maxLength={6}
-              className="w-full bg-zinc-800 border-2 border-zinc-600 focus:border-yellow-500 rounded p-3 text-neutral-200 text-2xl text-center font-mono tracking-widest outline-none transition-colors"
+              className="w-full bg-zinc-800 border-2 border-zinc-600 focus:border-green-500 rounded px-4 py-2 text-lg text-neutral-200 text-center font-mono tracking-widest outline-none transition-colors"
             />
           </div>
 
@@ -110,7 +121,7 @@ export function GuestLogin({ user, defaultJoinCode, onJoined }: GuestLoginProps)
           <Button
             onClick={handleContinue}
             disabled={!isValid || loading}
-            className="w-full bg-gradient-to-r from-yellow-500 to-yellow-600 hover:from-yellow-600 hover:to-yellow-700 text-zinc-900 h-12 text-lg disabled:from-zinc-600 disabled:to-zinc-700 disabled:text-neutral-400 disabled:opacity-100 disabled:cursor-not-allowed"
+            className="w-full bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-zinc-900 h-12 text-lg disabled:from-zinc-600 disabled:to-zinc-700 disabled:text-neutral-400 disabled:opacity-100 disabled:cursor-not-allowed"
           >
             {loading ? 'Joining...' : 'Continue'}
           </Button>
