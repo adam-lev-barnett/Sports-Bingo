@@ -81,11 +81,11 @@ export function HostCredentials({ onBack, onContinue, defaultUsername }: HostCre
         </div>
 
         {/* Centered title */}
-        <h2 className="text-green-500 uppercase tracking-wider text-center mb-8">
+        <h2 className="text-green-500 uppercase tracking-wider text-center font-bold mb-6">
           Host Setup
         </h2>
 
-        <div className="flex flex-col gap-5 items-center">
+        <div className="flex flex-col gap-4 items-center">
 
           {/* Team Name */}
           <div className="w-full">
@@ -98,12 +98,13 @@ export function HostCredentials({ onBack, onContinue, defaultUsername }: HostCre
               onChange={(e) => setGroupName(e.target.value.slice(0, 25))}
               placeholder="e.g. Sunday Crew"
               maxLength={25}
-              className="w-full bg-zinc-800 border-2 border-zinc-600 focus:border-green-500 rounded px-4 py-2 text-lg text-neutral-200 text-center outline-none transition-colors"
+              className="w-full bg-zinc-800 border-2 border-zinc-600 focus:border-green-500 rounded px-4 py-2 text-neutral-200 text-center outline-none transition-colors"
+              style={{ fontSize: '14px' }}
             />
           </div>
 
           {/* Username */}
-          <div className="w-full mb-3">
+          <div className="w-full">
             <label className="text-neutral-400 uppercase tracking-wider mb-1 block text-center" style={{ fontSize: '14px' }}>
               Username
             </label>
@@ -113,10 +114,11 @@ export function HostCredentials({ onBack, onContinue, defaultUsername }: HostCre
               onChange={(e) => handleUsernameChange(e.target.value)}
               placeholder="e.g. Jordan"
               maxLength={18}
-              className="w-full bg-zinc-800 border-2 border-zinc-600 focus:border-green-500 rounded px-4 py-2 text-lg text-neutral-200 text-center outline-none transition-colors"
+              className="w-full bg-zinc-800 border-2 border-zinc-600 focus:border-green-500 rounded px-4 py-2 text-neutral-200 text-center outline-none transition-colors"
+              style={{ fontSize: '14px' }}
             />
             {username.length > 0 && username.length < 2 && (
-              <p className="text-red-400 text-xs text-center mt-1">Minimum 2 characters</p>
+              <p className="text-red-400 text-center mt-1" style={{ fontSize: '14px' }}>Minimum 2 characters</p>
             )}
           </div>
 
@@ -127,17 +129,18 @@ export function HostCredentials({ onBack, onContinue, defaultUsername }: HostCre
                 initial={{ opacity: 0, y: 8 }}
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: 8 }}
-                className="w-full flex flex-col gap-2"
+                className="w-full flex flex-col gap-4"
               >
-                <div className="bg-zinc-800 border-2 border-zinc-700 rounded p-3 text-center">
-                  <p className="text-neutral-200 text-base mb-1">
-                    Join Code: <span className="text-green-500 font-mono tracking-widest text-xl">{joinCode}</span>
+                <div className="bg-zinc-800 border-2 border-zinc-700 rounded px-4 py-2 text-center">
+                  <p className="text-neutral-200" style={{ fontSize: '14px' }}>
+                    Join Code: <span className="text-green-500 font-mono tracking-widest text-base">{joinCode}</span>
                   </p>
-                  <p className="text-neutral-500" style={{ fontSize: '14px' }}>Share this code with your guests</p>
+                  <p className="text-neutral-400" style={{ fontSize: '14px' }}>Share this code with your guests</p>
                 </div>
                 <Button
                   onClick={handleShare}
                   className="w-full bg-gradient-to-r from-zinc-700 to-zinc-800 hover:from-zinc-600 hover:to-zinc-700 text-neutral-200 border-2 border-green-500 h-12"
+                  style={{ fontSize: '14px' }}
                 >
                   <Share2 className="w-4 h-4 mr-2" />
                   {copied ? 'Copied to Clipboard!' : 'Share Invite'}
@@ -156,12 +159,13 @@ export function HostCredentials({ onBack, onContinue, defaultUsername }: HostCre
                 className="w-full"
               >
                 {startError && (
-                  <p className="text-red-400 text-sm text-center mb-2">{startError}</p>
+                  <p className="text-red-400 text-center mb-2" style={{ fontSize: '14px' }}>{startError}</p>
                 )}
                 <Button
                   onClick={handleConfirmStart}
                   disabled={starting}
-                  className="w-full bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-zinc-900 h-12 text-lg disabled:opacity-60"
+                  className="w-full bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-zinc-900 h-10 disabled:opacity-60"
+                  style={{ fontSize: '14px' }}
                 >
                   {starting ? 'Starting…' : 'Start Game'}
                 </Button>

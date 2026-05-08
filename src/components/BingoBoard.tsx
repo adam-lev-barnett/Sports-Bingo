@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, ComponentType } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { ArrowLeft, RotateCcw, Trophy, Share2, Info } from 'lucide-react';
 import { Sport, SessionInfo } from '../App';
@@ -505,8 +505,8 @@ export function BingoBoard({ sport, sessionInfo, username, onBackToSports, onGam
               <span style={{ fontSize: '14px' }}>{copied ? 'Copied!' : 'Share'}</span>
             </Button>
             {sessionInfo?.joinCode && (
-              <p className="text-neutral-400 font-mono tracking-widest pr-1" style={{ fontSize: '14px' }}>
-                <span className="text-green-500">{sessionInfo.joinCode}</span>
+              <p className="text-neutral-400 pr-1" style={{ fontSize: '14px' }}>
+                Join Code: <span className="text-green-500">{sessionInfo.joinCode}</span>
               </p>
             )}
           </div>
@@ -517,8 +517,8 @@ export function BingoBoard({ sport, sessionInfo, username, onBackToSports, onGam
       {/* Multiplayer subtitle: team name + role/username */}
       {isMultiplayer && (
         <div className="text-center mb-1">
-          <p className="text-neutral-300 text-sm uppercase tracking-wider">{sessionInfo?.groupName}</p>
-          <p className="text-neutral-500 mt-0.5" style={{ fontSize: '14px' }}>
+          <p className="text-green-500 uppercase tracking-wider font-bold" style={{ fontSize: '16px' }}>Team {sessionInfo?.groupName}</p>
+          <p className="text-neutral-200 mt-0.5" style={{ fontSize: '14px' }}>
             {imHost ? `Host: ${username}` : `${sessionInfo?.initials}'s Board`}
           </p>
         </div>
@@ -594,7 +594,7 @@ export function BingoBoard({ sport, sessionInfo, username, onBackToSports, onGam
       <AnimatePresence>
         {expandedSquare !== null && (() => {
           const currentItem = bingoItems[expandedSquare];
-          const IconComponent = currentItem?.icon;
+          const IconComponent = currentItem?.icon as unknown as ComponentType<{ className?: string }> | undefined;
           return (
             <>
               <motion.div
