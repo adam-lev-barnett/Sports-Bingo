@@ -6,6 +6,7 @@ import { MultiplayerCodeLogin } from './components/MultiplayerCodeLogin';
 import { GuestLogin } from './components/GuestLogin';
 import { BingoBoardV2 as BingoBoard } from './components/BingoBoardV2';
 import { FAQ } from './components/FAQ';
+import { DevNav } from './components/DevNav';
 import { useAuth } from './hooks/useAuth';
 import { createMultiplayerSession, loginAsHost, rejoinSession, joinSessionByCode } from './lib/sessions';
 
@@ -237,6 +238,15 @@ export default function App() {
     setView('multiplayer-code-login');
   };
 
+  const handleDevNavigate = ({ view, sport, sessionInfo: si, username: un }: {
+    view: AppView; sport?: Sport; sessionInfo?: SessionInfo | null; username?: string;
+  }) => {
+    if (sport !== undefined) setSelectedSport(sport);
+    if (si !== undefined) setSessionInfo(si);
+    if (un !== undefined) setUsername(un);
+    setView(view);
+  };
+
   if (loading || !user || reconnecting) return null;
 
   return (
@@ -247,6 +257,7 @@ export default function App() {
       }}></div>
       <div className="absolute inset-0 bg-gradient-to-br from-zinc-900/50 via-neutral-950/80 to-stone-950/50"></div>
 
+      {import.meta.env.DEV && <DevNav onNavigate={handleDevNavigate} />}
       <div className="relative z-10">
         {view === 'session-lobby' && (
           <SessionLobby
