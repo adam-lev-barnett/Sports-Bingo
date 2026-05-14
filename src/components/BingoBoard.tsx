@@ -1,9 +1,9 @@
-import { useState, useEffect, useRef, ComponentType } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { ArrowLeft, RotateCcw, Trophy, Share2, Info } from 'lucide-react';
 import { Sport, SessionInfo } from '../App';
 import { BingoSquare } from './BingoSquare';
-import { getBingoItems, BingoItem } from './bingoData';
+import { getBingoItems, BingoItem } from './bingoDataNoIcons';
 import { Button } from './ui/button';
 import { Confetti } from './Confetti';
 import { supabase } from '../lib/supabase';
@@ -594,7 +594,6 @@ export function BingoBoard({ sport, sessionInfo, username, onBackToSports, onGam
       <AnimatePresence>
         {expandedSquare !== null && (() => {
           const currentItem = bingoItems[expandedSquare];
-          const IconComponent = currentItem?.icon as unknown as ComponentType<{ className?: string }> | undefined;
           return (
             <>
               <motion.div
@@ -610,16 +609,6 @@ export function BingoBoard({ sport, sessionInfo, username, onBackToSports, onGam
                 className="fixed inset-x-0 bottom-0 z-50 bg-zinc-800 border-t-4 border-green-500 rounded-t-lg p-5 overflow-y-auto" style={{ maxHeight: '80vh' }}
               >
                 <div className="max-w-md mx-auto">
-                  <div className="flex justify-center mb-4">
-                    <motion.div
-                      initial={{ scale: 0, rotate: -180 }}
-                      animate={{ scale: 1, rotate: 0 }}
-                      transition={{ type: 'spring' }}
-                      className="bg-gradient-to-br from-green-500 to-green-600 p-4 rounded border-2 border-zinc-700"
-                    >
-                      {IconComponent && <IconComponent className="w-12 h-12 text-zinc-900" />}
-                    </motion.div>
-                  </div>
                   <h3 className="text-center mb-3 text-neutral-200 uppercase tracking-wide">
                     {currentItem?.name}
                   </h3>

@@ -1,6 +1,6 @@
 import { motion } from 'motion/react';
-import { Check, Star } from 'lucide-react';
-import { BingoItem } from './bingoData';
+import { Check } from 'lucide-react';
+import { BingoItem } from './bingoDataNoIcons';
 
 interface BingoSquareProps {
   item: BingoItem;
@@ -27,15 +27,8 @@ export function BingoSquare({ item, isMarked, isFreeSpace, onClick }: BingoSquar
       `}
       style={isFreeSpace || isMarked ? { background: 'linear-gradient(to bottom right, #17BB34, #14a12d)' } : undefined}
     >
-      {/* Icon */}
-      {isFreeSpace ? (
-        <Star className="w-5 h-5 text-zinc-900 fill-zinc-900" />
-      ) : (
-        <item.icon className={`w-5 h-5 ${isMarked ? 'text-zinc-900' : 'text-neutral-300'}`} />
-      )}
-
       {/* Label */}
-      <span style={{ fontSize: '12px' }} className={`mt-0.5 text-center leading-tight ${isMarked || isFreeSpace ? 'text-zinc-900' : 'text-neutral-400'}`}>
+      <span style={{ fontSize: '11px' }} className={`text-center leading-tight font-medium ${isMarked || isFreeSpace ? 'text-zinc-900' : 'text-neutral-200'}`}>
         {isFreeSpace ? 'FREE' : item.name}
       </span>
 

@@ -1,6 +1,6 @@
 import { supabase } from './supabase';
 import { Sport } from '../App';
-import { getBingoItems } from '../components/bingoData';
+import { getBingoItems } from '../components/bingoDataNoIcons';
 import { RealtimeChannel } from '@supabase/supabase-js';
 
 export interface PlayerRow {
