@@ -6,7 +6,6 @@ import { MultiplayerCodeLogin } from './components/MultiplayerCodeLogin';
 import { GuestLogin } from './components/GuestLogin';
 import { BingoBoardV2 as BingoBoard } from './components/BingoBoardV2';
 import { FAQ } from './components/FAQ';
-import { DevNav } from './components/DevNav';
 import { useAuth } from './hooks/useAuth';
 import { createMultiplayerSession, loginAsHost, rejoinSession, joinSessionByCode } from './lib/sessions';
 
@@ -238,20 +237,20 @@ export default function App() {
     setView('multiplayer-code-login');
   };
 
-  const handleDevNavigate = ({ view, sport, sessionInfo: si, username: un }: {
-    view: AppView; sport?: Sport; sessionInfo?: SessionInfo | null; username?: string;
-  }) => {
-    if (sport !== undefined) setSelectedSport(sport);
-    if (si !== undefined) setSessionInfo(si);
-    if (un !== undefined) setUsername(un);
-    setView(view);
-  };
+  // const handleDevNavigate = ({ view, sport, sessionInfo: si, username: un }: {
+  //   view: AppView; sport?: Sport; sessionInfo?: SessionInfo | null; username?: string;
+  // }) => {
+  //   if (sport !== undefined) setSelectedSport(sport);
+  //   if (si !== undefined) setSessionInfo(si);
+  //   if (un !== undefined) setUsername(un);
+  //   setView(view);
+  // };
 
   if (loading || !user || reconnecting) return null;
 
   return (
     <>
-    {import.meta.env.DEV && <DevNav onNavigate={handleDevNavigate} />}
+    {/* import.meta.env.DEV && <DevNav onNavigate={handleDevNavigate} /> */}
     <div className="min-h-screen bg-zinc-950 relative overflow-hidden">
       <div className="absolute inset-0" style={{ opacity: 0.03,
         backgroundImage: `repeating-linear-gradient(45deg, transparent, transparent 10px, rgba(255,255,255,.5) 10px, rgba(255,255,255,.5) 11px),
