@@ -48,18 +48,17 @@ function checkBingo(marked: Set<number>): boolean {
 }
 
 function generateBoardOrder(totalItems: number): number[] {
-  const freeSpaceIdx = 12;
-  const available = Array.from({ length: totalItems }, (_, i) => i).filter(i => i !== freeSpaceIdx);
+  const available = Array.from({ length: totalItems }, (_, i) => i);
   for (let i = available.length - 1; i > 0; i--) {
     const j = Math.floor(Math.random() * (i + 1));
     [available[i], available[j]] = [available[j], available[i]];
   }
   const selected = available.slice(0, 24);
-  return [...selected.slice(0, 12), freeSpaceIdx, ...selected.slice(12)];
+  return [...selected.slice(0, 12), -1, ...selected.slice(12)];
 }
 
-function boardFromOrder(items: BingoItem[], order: number[]): BingoItem[] {
-  return order.map(i => items[i]);
+function boardFromOrder(items: BingoItem[], order: number[]): (BingoItem | null)[] {
+  return order.map(i => i === -1 ? null : items[i]);
 }
 
 function WinOrExpirePopup({
@@ -114,7 +113,7 @@ export function BingoBoardV2({ sport, sessionInfo, username, onBackToSports, onG
   const imHost = !!sessionInfo?.isHost;
 
   // Board state
-  const [bingoItems, setBingoItems] = useState<BingoItem[]>([]);
+  const [bingoItems, setBingoItems] = useState<(BingoItem | null)[]>([]);
   const [boardOrder, setBoardOrder] = useState<number[]>([]);
   const [markedSquares, setMarkedSquares] = useState<Set<number>>(new Set([12]));
   const [boardReady, setBoardReady] = useState(false);
