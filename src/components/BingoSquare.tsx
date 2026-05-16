@@ -11,6 +11,26 @@ interface BingoSquareProps {
   onClick: () => void;
 }
 
+const DISPLAY_REPLACEMENTS: [RegExp, string][] = [
+  [/\bReferee\b/gi, 'Ref'],
+  [/\bTouchdown\b/gi, 'TD'],
+  [/\bFirst\b/gi, '1st'],
+  [/\bSecond\b/gi, '2nd'],
+  [/\bThird\b/gi, '3rd'],
+  [/\bIntroductions\b/gi, 'Intros'],
+  [/\bInterference\b/gi, 'Interfer'],
+  [/\bInterception\b/gi, 'Intrcp'],
+  [/\bSubstitution\b/gi, 'Subs'],
+  [/\bUnsportsmanlike\b/gi, 'Unsportsman-like'],
+  [/\bEmbellishment\b/gi, 'Embellish'],
+  [/\bCheerleaders\b/gi, 'Cheerleader'],
+  [/\bEncroachment\b/gi, 'Encroach'],
+];
+
+function displayName(name: string): string {
+  return DISPLAY_REPLACEMENTS.reduce((s, [pattern, replacement]) => s.replace(pattern, replacement), name);
+}
+
 export function BingoSquare({ item, isMarked, isFreeSpace, onClick }: BingoSquareProps) {
   return (
     <motion.button
@@ -45,7 +65,7 @@ export function BingoSquare({ item, isMarked, isFreeSpace, onClick }: BingoSquar
 
       {/* Label — on top of icon */}
       <span style={{ fontSize: '13px', position: 'relative' }} className={`text-center leading-tight font-medium ${isMarked || isFreeSpace ? 'text-zinc-900' : 'text-neutral-200'}`}>
-        {isFreeSpace ? 'FREE' : item?.name}
+        {isFreeSpace ? 'FREE' : displayName(item?.name ?? '')}
       </span>
 
     </motion.button>
