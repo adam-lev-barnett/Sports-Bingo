@@ -30,7 +30,7 @@ const faqs = [
   },
   {
     q: 'How long does a multiplayer session last?',
-    a: 'Multiplayer sessions expire after 6 hours. You\'ll get a 30-minute warning before time runs out.',
+    a: 'Multiplayer sessions expire after 24 hours or when the host ends the game. You\'ll get a 30-minute warning before time runs out.',
   },
   {
     q: 'Can I rejoin a game if I leave?',

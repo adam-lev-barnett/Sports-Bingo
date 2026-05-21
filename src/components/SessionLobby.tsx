@@ -10,6 +10,7 @@ interface SessionLobbyProps {
   onMultiplayerCreate: (username: string) => void;
   onJoin: (username: string, code: string) => Promise<void>;
   onFaq: () => void;
+  onPrivacyPolicy: () => void;
 }
 
 const GREEN = '#17BB34';
@@ -37,7 +38,7 @@ function titleCase(val: string): string {
     .join(' ');
 }
 
-export function SessionLobby({ user: _user, onSolo, onMultiplayerCreate, onJoin, onFaq }: SessionLobbyProps) {
+export function SessionLobby({ user: _user, onSolo, onMultiplayerCreate, onJoin, onFaq, onPrivacyPolicy }: SessionLobbyProps) {
   const [username, setUsername] = useState('');
   const [showUsernameError, setShowUsernameError] = useState(false);
   const [infoPopup, setInfoPopup] = useState<'solo' | 'multiplayer' | 'join' | null>(null);
@@ -251,6 +252,7 @@ export function SessionLobby({ user: _user, onSolo, onMultiplayerCreate, onJoin,
       {/* Footer links */}
       <div className="flex flex-col items-center gap-3 pb-8">
         <button
+          type="button"
           onClick={onFaq}
           className="text-neutral-400 hover:text-neutral-300 tracking-wider transition-colors"
           style={{ fontSize: '14px', fontWeight: 'normal' }}
@@ -266,7 +268,14 @@ export function SessionLobby({ user: _user, onSolo, onMultiplayerCreate, onJoin,
         >
           Submit an Issue
         </a>
-
+        <button
+          type="button"
+          onClick={onPrivacyPolicy}
+          className="text-neutral-400 hover:text-neutral-300 tracking-wider transition-colors"
+          style={{ fontSize: '14px', fontWeight: 'normal' }}
+        >
+          Privacy Policy
+        </button>
       </div>
 
       {/* Info bottom sheet */}

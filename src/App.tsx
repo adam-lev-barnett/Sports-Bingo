@@ -6,6 +6,7 @@ import { MultiplayerCodeLogin } from './components/MultiplayerCodeLogin';
 import { GuestLogin } from './components/GuestLogin';
 import { BingoBoardV2 as BingoBoard } from './components/BingoBoardV2';
 import { FAQ } from './components/FAQ';
+import { PrivacyPolicy } from './components/PrivacyPolicy';
 // import { DevNav } from './components/DevNav';
 import { useAuth } from './hooks/useAuth';
 import { createMultiplayerSession, loginAsHost, rejoinSession, joinSessionByCode } from './lib/sessions';
@@ -19,6 +20,7 @@ type AppView =
   | 'multiplayer-code-login'
   | 'guest-login'
   | 'faq'
+  | 'privacy-policy'
   | 'game';
 
 type SessionMode = 'solo' | 'multiplayer-create';
@@ -267,10 +269,14 @@ export default function App() {
             onMultiplayerCreate={handleMultiplayerCreate}
             onJoin={handleJoin}
             onFaq={() => setView('faq')}
+            onPrivacyPolicy={() => setView('privacy-policy')}
           />
         )}
         {view === 'faq' && (
           <FAQ onBack={handleBackToLobby} />
+        )}
+        {view === 'privacy-policy' && (
+          <PrivacyPolicy onBack={handleBackToLobby} />
         )}
         {view === 'sport-selection' && (
           <SportSelection onSelectSport={handleSportSelect} onBack={handleBackToLobby} />

@@ -22,7 +22,7 @@ export async function createSession(sport: Sport, userId: string) {
       sport,
       terms,
       created_by: userId,
-      expires_at: new Date(Date.now() + 6 * 60 * 60 * 1000).toISOString(),
+      expires_at: new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString(),
       status: 'active',
     })
     .select()
@@ -95,7 +95,7 @@ export async function createMultiplayerSession(
       group_name: groupName,
       join_code: joinCode,
       started_at: now.toISOString(),
-      expires_at: new Date(now.getTime() + 6 * 60 * 60 * 1000).toISOString(),
+      expires_at: new Date(now.getTime() + 24 * 60 * 60 * 1000).toISOString(),
       status: 'active',
     })
     .select()
